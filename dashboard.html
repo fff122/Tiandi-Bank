@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #003087, #e6f0fa); /* 深蓝到浅蓝 */
+            background: linear-gradient(135deg, #003087, #e6f0fa);
             color: #333;
             animation: fadeIn 1s ease-in;
         }
@@ -19,7 +19,7 @@
             to { opacity: 1; }
         }
         .navbar {
-            background-color: #003087; /* 深蓝色 */
+            background-color: #003087;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         .navbar-brand, .nav-link.navbar-top {
@@ -27,7 +27,7 @@
             transition: color 0.3s;
         }
         .nav-link.navbar-top:hover {
-            color: #b3cde0 !important; /* 浅蓝色 */
+            color: #b3cde0 !important;
         }
         .sidebar {
             background: rgba(255, 255, 255, 0.9);
@@ -43,7 +43,7 @@
             transition: color 0.3s;
         }
         .sidebar .nav-link:hover {
-            color: #005b96 !important; /* 中蓝色 */
+            color: #005b96 !important;
         }
         .content {
             margin-left: 270px;
@@ -61,17 +61,41 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         .btn-primary {
-            background-color: #005b96; /* 中蓝色 */
+            background-color: #005b96;
             border-color: #005b96;
             transition: transform 0.2s;
         }
         .btn-primary:hover {
             transform: scale(1.05);
-            background-color: #003087; /* 深蓝色 */
+            background-color: #003087;
             border-color: #003087;
         }
+        .chat-modal .modal-content {
+            background: #e6f0fa;
+        }
+        .chat-modal .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: white;
+        }
+        .chat-modal .message {
+            margin: 10px 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .chat-modal .user-message {
+            background: #005b96;
+            color: white;
+            text-align: right;
+        }
+        .chat-modal .ai-message {
+            background: #f0f0f0;
+            color: #333;
+        }
         footer {
-            background-color: #003087; /* 深蓝色 */
+            background-color: #003087;
             color: white;
             padding: 30px 0;
             text-align: center;
@@ -101,7 +125,7 @@
                     <option value="zh">中文</option>
                     <option value="en">English</option>
                 </select>
-                <button class="btn btn-outline-light ms-2" onclick="alert('已退出登录 / Logged out')">退出</button>
+                <button class="btn btn-outline-light ms-2" onclick="logout()">退出</button>
             </div>
         </div>
     </nav>
@@ -126,6 +150,9 @@
                     <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('crossWorldTransfer')" data-key="crossWorldTransfer">跨世转账</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('offerBuddha')" data-key="offerBuddha">供佛</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('contacts')" data-key="contacts">通讯录</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('currencyExchange')" data-key="currencyExchange">货币兑换</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('exchangeRates')" data-key="exchangeRates">汇率查询</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showChatModal()" data-key="treasuryLink">直连督财府</a></li>
                 </ul>
             </div>
 
@@ -138,7 +165,7 @@
                     <p>5000 柱 (柱 = Incense Sticks)</p>
                     <canvas id="incenseChart" height="100"></canvas>
                     <h3 data-key="currencyRates">冥币兑换比例</h3>
-                    <ul>
+                    <ul id="exchangeRateList">
                         <li>1 冥币 = 0.01 人民币 (¥)</li>
                         <li>1 冥币 = 0.0015 美元 ($)</li>
                         <li>1 冥币 = 10 天仙积分 (Immortal Points)</li>
@@ -188,6 +215,7 @@
                         <li>2025-02-26 10:00: 转账 1000 冥币 至 二郎神 (账号: ERLANG123)</li>
                         <li>2025-02-26 12:00: 购买 5 张符箓，花费 500 冥币</li>
                         <li>2025-02-26 15:00: 充值 2000 冥币</li>
+                        <li>2025-02-26 16:00: 兑换 1000 冥币 为 1.5 美元</li>
                     </ul>
                 </div>
 
@@ -330,6 +358,59 @@
                         <button type="submit" class="btn btn-primary" data-key="addContact">添加联系人</button>
                     </form>
                 </div>
+
+                <!-- 货币兑换 -->
+                <div class="card hidden" id="currencyExchange">
+                    <h3 data-key="currencyExchange">货币兑换</h3>
+                    <form onsubmit="event.preventDefault(); exchangeCurrency();">
+                        <div class="mb-3">
+                            <label for="exchangeType" class="form-label" data-key="exchangeType">兑换类型</label>
+                            <select class="form-select" id="exchangeType">
+                                <option value="toUSD">冥币转美元</option>
+                                <option value="toPoints">冥币转天仙积分</option>
+                                <option value="fromPoints">天仙积分转冥币</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exchangeAmount" class="form-label" data-key="amount">金额</label>
+                            <input type="number" class="form-control" id="exchangeAmount" placeholder="1000" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-key="exchangeBtn">兑换</button>
+                    </form>
+                    <p id="exchangeResult"></p>
+                </div>
+
+                <!-- 汇率查询 -->
+                <div class="card hidden" id="exchangeRates">
+                    <h3 data-key="exchangeRates">当日汇率</h3>
+                    <ul id="dailyExchangeRateList">
+                        <li>1 冥币 = 0.01 人民币 (¥)</li>
+                        <li>1 冥币 = 0.0015 美元 ($)</li>
+                        <li>1 冥币 = 10 天仙积分 (Immortal Points)</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="updateExchangeRates()">刷新汇率</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 督财府对话模态框 -->
+    <div class="modal fade chat-modal" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chatModalLabel" data-key="treasuryLink">直连督财府</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="chat-box" id="chatBox"></div>
+                    <form onsubmit="event.preventDefault(); sendMessage();" class="mt-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="chatInput" placeholder="输入您的请求..." required>
+                            <button type="submit" class="btn btn-primary" data-key="send">发送</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -345,263 +426,412 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const translations = {
-            zh: {
-                home: "首页",
-                dashboard: "后台",
-                menu: "功能菜单",
-                recharge: "充值",
-                sixRealms: "六道轮回",
-                chanting: "经典诵经",
-                transactions: "交易记录",
-                payment: "支付",
-                destinyDraw: "天命抽签",
-                transfer: "转账",
-                talisman: "符箓购买",
-                myItems: "我的商品",
-                deleteTransactions: "删除交易记录",
-                threeRealmsTransfer: "三界转账",
-                elixirCrafting: "丹药炼制",
-                crossWorldTransfer: "跨世转账",
-                offerBuddha: "供佛",
-                contacts: "通讯录",
-                incenseToday: "今日香火",
-                currencyRates: "冥币兑换比例",
-                immortalNews: "今日仙界新闻",
-                emperorPolicy: "玉皇大帝政策",
-                amount: "金额 (冥币)",
-                rechargeBtn: "充值",
-                payBtn: "支付",
-                transferBtn: "转账",
-                offerBtn: "供奉",
-                recipient: "收款人",
-                account: "账号",
-                realm: "目标领域",
-                world: "目标世界",
-                name: "姓名",
-                addContact: "添加联系人",
-                contactUs: "联系我们：info@chinaearthbank.com | 电话：1-800-473-3622"
-            },
-            en: {
-                home: "Home",
-                dashboard: "Dashboard",
-                menu: "Menu",
-                recharge: "Recharge",
-                sixRealms: "Six Realms Reincarnation",
-                chanting: "Classic Chanting",
-                transactions: "Transaction History",
-                payment: "Payment",
-                destinyDraw: "Destiny Draw",
-                transfer: "Transfer",
-                talisman: "Talisman Purchase",
-                myItems: "My Items",
-                deleteTransactions: "Delete Transactions",
-                threeRealmsTransfer: "Three Realms Transfer",
-                elixirCrafting: "Elixir Crafting",
-                crossWorldTransfer: "Cross-World Transfer",
-                offerBuddha: "Offer to Buddha",
-                contacts: "Contacts",
-                incenseToday: "Today’s Incense",
-                currencyRates: "Underworld Currency Rates",
-                immortalNews: "Immortal Realm News",
-                emperorPolicy: "Jade Emperor’s Policy",
-                amount: "Amount (Underworld Currency)",
-                rechargeBtn: "Recharge",
-                payBtn: "Pay",
-                transferBtn: "Transfer",
-                offerBtn: "Offer",
-                recipient: "Recipient",
-                account: "Account",
-                realm: "Target Realm",
-                world: "Target World",
-                name: "Name",
-                addContact: "Add Contact",
-                contactUs: "Contact Us: info@chinaearthbank.com | Phone: 1-800-473-3622"
-            }
-        };
+    <!-- 保留之前的HTML结构... -->
 
-        let balance = 5000; // 初始冥币余额
-        let merit = 300; // 初始功德值
-        const validAccounts = ["ERLANG123", "GUANYIN456", "YANLUO789"]; // 有效账号
+<footer>
+    <p>© 2025 中国天地银行。保留所有权利。</p>
+    <p data-key="contactUs">联系我们：info@chinaearthbank.com | 电话：1-800-473-3622</p>
+    <div>
+        <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a> |
+        <a href="#" class="text-white"><i class="fab fa-twitter"></i></a> |
+        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+    </div>
+</footer>
 
-        function changeLanguage(lang) {
-            document.querySelectorAll("[data-key]").forEach(element => {
-                const key = element.getAttribute("data-key");
-                element.textContent = translations[lang][key];
-            });
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const translations = {
+        zh: {
+            home: "首页",
+            dashboard: "后台",
+            menu: "功能菜单",
+            recharge: "充值",
+            sixRealms: "六道轮回",
+            chanting: "经典诵经",
+            transactions: "交易记录",
+            payment: "支付",
+            destinyDraw: "天命抽签",
+            transfer: "转账",
+            talisman: "符箓购买",
+            myItems: "我的商品",
+            deleteTransactions: "删除交易记录",
+            threeRealmsTransfer: "三界转账",
+            elixirCrafting: "丹药炼制",
+            crossWorldTransfer: "跨世转账",
+            offerBuddha: "供佛",
+            contacts: "通讯录",
+            currencyExchange: "货币兑换",
+            exchangeRates: "汇率查询",
+            treasuryLink: "直连督财府",
+            exchangeType: "兑换类型",
+            exchangeBtn: "兑换",
+            send: "发送",
+            incenseToday: "今日香火",
+            currencyRates: "冥币兑换比例",
+            immortalNews: "今日仙界新闻",
+            emperorPolicy: "玉皇大帝政策",
+            amount: "金额",
+            rechargeBtn: "充值",
+            payBtn: "支付",
+            transferBtn: "转账",
+            offerBtn: "供奉",
+            account: "账号",
+            realm: "目标领域",
+            world: "目标世界",
+            name: "姓名",
+            addContact: "添加联系人",
+            contactUs: "联系我们：info@chinaearthbank.com | 电话：1-800-473-3622"
+        },
+        en: {
+            home: "Home",
+            dashboard: "Dashboard",
+            menu: "Menu",
+            recharge: "Recharge",
+            sixRealms: "Six Realms Reincarnation",
+            chanting: "Classic Chanting",
+            transactions: "Transaction History",
+            payment: "Payment",
+            destinyDraw: "Destiny Draw",
+            transfer: "Transfer",
+            talisman: "Talisman Purchase",
+            myItems: "My Items",
+            deleteTransactions: "Delete Transactions",
+            threeRealmsTransfer: "Three Realms Transfer",
+            elixirCrafting: "Elixir Crafting",
+            crossWorldTransfer: "Cross-World Transfer",
+            offerBuddha: "Offer to Buddha",
+            contacts: "Contacts",
+            currencyExchange: "Currency Exchange",
+            exchangeRates: "Exchange Rates",
+            treasuryLink: "Direct Treasury Connection",
+            exchangeType: "Exchange Type",
+            exchangeBtn: "Exchange",
+            send: "Send",
+            incenseToday: "Today’s Incense",
+            currencyRates: "Underworld Currency Rates",
+            immortalNews: "Immortal Realm News",
+            emperorPolicy: "Jade Emperor’s Policy",
+            amount: "Amount",
+            rechargeBtn: "Recharge",
+            payBtn: "Pay",
+            transferBtn: "Transfer",
+            offerBtn: "Offer",
+            account: "Account",
+            realm: "Target Realm",
+            world: "Target World",
+            name: "Name",
+            addContact: "Add Contact",
+            contactUs: "Contact Us: info@chinaearthbank.com | Phone: 1-800-473-3622"
         }
+    };
 
-        function showSection(sectionId) {
-            document.querySelectorAll(".card").forEach(card => card.classList.add("hidden"));
-            document.getElementById(sectionId).classList.remove("hidden");
-            document.getElementById("overview").classList.add("hidden");
+    let balance = 5000; // 初始冥币余额
+    let merit = 300; // 初始功德值
+    let immortalPoints = 0; // 初始天仙积分
+    const validAccounts = ["ERLANG123", "GUANYIN456", "YANLUO789"]; // 有效账号
+    let exchangeRates = {
+        CNY: 0.01, // 人民币
+        USD: 0.0015, // 美元
+        Points: 10 // 天仙积分
+    };
+
+    // 定义Prompt
+    const prompt = `天庭督财府 Prompt
+
+你现在是天庭督财府的首席司财官“金禄星君”，负责掌管天庭的财富分配、资源调度以及凡间的财运监察。天庭督财府是一个庄严而神秘的机构，坐落于九重天云海之上，金瓦玉柱，霞光环绕，府内设有“聚宝殿”、“财运司”和“福禄档案库”。你的职责包括：
+
+监督三界（天、地、人）的财富流动，确保阴阳平衡；
+根据凡人的功德与因果，调整他们的财运赐福；
+管理天庭的仙宝库存，如蟠桃、金丹、灵石等；
+应对突发状况，如凡间经济混乱或妖魔盗宝。
+现在，有凡人或仙官向你提出请求，你需要以金禄星君的身份，用睿智、威严又不失幽默的语气回应，同时展现出对财富与命运的深刻洞察。回答时，可随意引用天庭的典故或神话元素，但要自然融入对话。当前日期为凡间纪年 2025 年 2 月 26 日，天庭纪年为“玄霄九万三千五百二十一年”。`;
+
+    function changeLanguage(lang) {
+        document.querySelectorAll("[data-key]").forEach(element => {
+            const key = element.getAttribute("data-key");
+            element.textContent = translations[lang][key];
+        });
+    }
+
+    function showSection(sectionId) {
+        document.querySelectorAll(".card").forEach(card => card.classList.add("hidden"));
+        document.getElementById(sectionId).classList.remove("hidden");
+        document.getElementById("overview").classList.add("hidden");
+    }
+
+    function showChatModal() {
+        const modal = new bootstrap.Modal(document.getElementById('chatModal'));
+        modal.show();
+    }
+
+    function recharge() {
+        const amount = parseInt(document.getElementById("rechargeAmount").value);
+        balance += amount;
+        addTransaction(`充值 ${amount} 冥币`);
+        alert(`充值成功！余额: ${balance} 冥币 / Recharge successful! Balance: ${balance}`);
+    }
+
+    function reincarnate() {
+        const realms = ["天界", "人界", "阿修罗", "畜生", "饿鬼", "地狱"];
+        const result = realms[Math.floor(Math.random() * realms.length)];
+        merit += 50;
+        document.getElementById("currentRealm").textContent = `当前状态: ${result} (Merit: ${merit})`;
+        document.getElementById("reincarnationResult").textContent = `轮回至: ${result}, 功德值: ${merit}`;
+    }
+
+    function chant() {
+        const scripture = document.getElementById("scripture").value;
+        merit += 20;
+        document.getElementById("chantResult").textContent = `诵读${scripture === "heart" ? "心经" : "金刚经"}完成，功德值: ${merit}`;
+    }
+
+    function deleteTransactions() {
+        document.getElementById("transactionList").innerHTML = "";
+        alert("所有交易记录已删除 / All transactions deleted!");
+    }
+
+    function pay() {
+        const amount = parseInt(document.getElementById("paymentAmount").value);
+        if (amount > balance) {
+            alert("余额不足 / Insufficient balance!");
+            return;
         }
+        balance -= amount;
+        addTransaction(`支付 ${amount} 冥币`);
+        document.getElementById("paymentResult").textContent = `支付成功！余额: ${balance} 冥币`;
+    }
 
-        function recharge() {
-            const amount = parseInt(document.getElementById("rechargeAmount").value);
-            balance += amount;
-            addTransaction(`充值 ${amount} 冥币`);
-            alert(`充值成功！余额: ${balance} 冥币 / Recharge successful! Balance: ${balance}`);
+    function drawDestiny() {
+        const draws = ["财运亨通", "近期需谨慎", "平安顺利", "大吉大利"];
+        const result = draws[Math.floor(Math.random() * draws.length)];
+        document.getElementById("destinyResult").textContent = `抽签结果: ${result}`;
+    }
+
+    function transfer() {
+        const account = document.getElementById("transferAccount").value.toUpperCase();
+        const amount = parseInt(document.getElementById("transferAmount").value);
+        if (!validAccounts.includes(account)) {
+            alert("无效账号 / Invalid account!");
+            return;
         }
-
-        function reincarnate() {
-            const realms = ["天界", "人界", "阿修罗", "畜生", "饿鬼", "地狱"];
-            const result = realms[Math.floor(Math.random() * realms.length)];
-            merit += 50;
-            document.getElementById("currentRealm").textContent = `当前状态: ${result} (Merit: ${merit})`;
-            document.getElementById("reincarnationResult").textContent = `轮回至: ${result}, 功德值: ${merit}`;
+        if (amount > balance) {
+            alert("余额不足 / Insufficient balance!");
+            return;
         }
+        balance -= amount;
+        const recipient = account === "ERLANG123" ? "二郎神" : account === "GUANYIN456" ? "观音菩萨" : "阎罗王";
+        addTransaction(`转账 ${amount} 冥币 至 ${recipient} (账号: ${account})`);
+        document.getElementById("transferResult").textContent = `转账成功！余额: ${balance} 冥币`;
+    }
 
-        function chant() {
-            const scripture = document.getElementById("scripture").value;
-            merit += 20;
-            document.getElementById("chantResult").textContent = `诵读${scripture === "heart" ? "心经" : "金刚经"}完成，功德值: ${merit}`;
+    function buyTalisman() {
+        const type = document.getElementById("talismanType").value;
+        const cost = type === "peace" ? 500 : 800;
+        if (cost > balance) {
+            alert("余额不足 / Insufficient balance!");
+            return;
         }
+        balance -= cost;
+        addTransaction(`购买 ${type === "peace" ? "平安符" : "招财符"}，花费 ${cost} 冥币`);
+        document.getElementById("talismanResult").textContent = `购买成功！余额: ${balance} 冥币`;
+        addItem(type === "peace" ? "平安符" : "招财符");
+    }
 
-        function deleteTransactions() {
-            document.getElementById("transactionList").innerHTML = "";
-            alert("所有交易记录已删除 / All transactions deleted!");
+    function threeRealmsTransfer() {
+        const realm = document.getElementById("realm").value;
+        const amount = parseInt(document.getElementById("realmAmount").value);
+        if (amount > balance) {
+            alert("余额不足 / Insufficient balance!");
+            return;
         }
+        balance -= amount;
+        addTransaction(`三界转账 ${amount} 冥币 至 ${realm === "heaven" ? "天界" : realm === "human" ? "人界" : "地界"}`);
+        document.getElementById("realmTransferResult").textContent = `转账成功！余额: ${balance} 冥币`;
+    }
 
-        function pay() {
-            const amount = parseInt(document.getElementById("paymentAmount").value);
-            if (amount > balance) {
-                alert("余额不足 / Insufficient balance!");
-                return;
-            }
+    function craftElixir() {
+        const cost = 300;
+        if (cost > balance) {
+            alert("余额不足 / Insufficient balance!");
+            return;
+        }
+        balance -= cost;
+        addTransaction(`炼制增益丹，花费 ${cost} 冥币`);
+        document.getElementById("elixirResult").textContent = `炼制成功！余额: ${balance} 冥币`;
+        addItem("增益丹");
+    }
+
+    function crossWorldTransfer() {
+        const world = document.getElementById("world").value;
+        const amount = parseInt(document.getElementById("worldAmount").value);
+        if (amount > balance) {
+            alert("余额不足 / Insufficient balance!");
+            return;
+        }
+        balance -= amount;
+        addTransaction(`跨世转账 ${amount} 冥币 至 ${world}`);
+        document.getElementById("worldTransferResult").textContent = `转账成功！余额: ${balance} 冥币`;
+    }
+
+    function offerBuddha() {
+        const amount = parseInt(document.getElementById("offeringAmount").value);
+        if (amount > balance) {
+            alert("余额不足 / Insufficient balance!");
+            return;
+        }
+        balance -= amount;
+        merit += amount * 1.5; // 政策加成50%
+        addTransaction(`供佛 ${amount} 冥币`);
+        document.getElementById("offerResult").textContent = `供奉成功！余额: ${balance} 冥币, 功德值: ${merit}`;
+    }
+
+    function addContact() {
+        const name = document.getElementById("contactName").value;
+        const account = document.getElementById("contactAccount").value.toUpperCase();
+        const li = document.createElement("li");
+        li.textContent = `${name} (${account})`;
+        document.getElementById("contactList").appendChild(li);
+        validAccounts.push(account);
+        alert(`联系人 ${name} 添加成功 / Contact ${name} added successfully!`);
+    }
+
+    function exchangeCurrency() {
+        const type = document.getElementById("exchangeType").value;
+        const amount = parseInt(document.getElementById("exchangeAmount").value);
+        let result;
+        if (type === "toUSD" && amount <= balance) {
+            const usdAmount = amount * exchangeRates.USD;
             balance -= amount;
-            addTransaction(`支付 ${amount} 冥币`);
-            document.getElementById("paymentResult").textContent = `支付成功！余额: ${balance} 冥币`;
-        }
-
-        function drawDestiny() {
-            const draws = ["财运亨通", "近期需谨慎", "平安顺利", "大吉大利"];
-            const result = draws[Math.floor(Math.random() * draws.length)];
-            document.getElementById("destinyResult").textContent = `抽签结果: ${result}`;
-        }
-
-        function transfer() {
-            const account = document.getElementById("transferAccount").value.toUpperCase();
-            const amount = parseInt(document.getElementById("transferAmount").value);
-            if (!validAccounts.includes(account)) {
-                alert("无效账号 / Invalid account!");
-                return;
-            }
-            if (amount > balance) {
-                alert("余额不足 / Insufficient balance!");
-                return;
-            }
+            addTransaction(`兑换 ${amount} 冥币 为 ${usdAmount.toFixed(2)} 美元`);
+            result = `兑换成功！获得 ${usdAmount.toFixed(2)} 美元，冥币余额: ${balance}`;
+        } else if (type === "toPoints" && amount <= balance) {
+            const points = amount * exchangeRates.Points;
             balance -= amount;
-            const recipient = account === "ERLANG123" ? "二郎神" : account === "GUANYIN456" ? "观音菩萨" : "阎罗王";
-            addTransaction(`转账 ${amount} 冥币 至 ${recipient} (账号: ${account})`);
-            document.getElementById("transferResult").textContent = `转账成功！余额: ${balance} 冥币`;
+            immortalPoints += points;
+            addTransaction(`兑换 ${amount} 冥币 为 ${points} 天仙积分`);
+            result = `兑换成功！获得 ${points} 天仙积分，冥币余额: ${balance}, 天仙积分: ${immortalPoints}`;
+        } else if (type === "fromPoints" && amount <= immortalPoints) {
+            const mcAmount = amount / exchangeRates.Points;
+            immortalPoints -= amount;
+            balance += mcAmount;
+            addTransaction(`兑换 ${amount} 天仙积分 为 ${mcAmount.toFixed(2)} 冥币`);
+            result = `兑换成功！获得 ${mcAmount.toFixed(2)} 冥币，天仙积分: ${immortalPoints}, 冥币余额: ${balance}`;
+        } else {
+            result = "余额不足或输入无效 / Insufficient balance or invalid input!";
         }
+        document.getElementById("exchangeResult").textContent = result;
+    }
 
-        function buyTalisman() {
-            const type = document.getElementById("talismanType").value;
-            const cost = type === "peace" ? 500 : 800;
-            if (cost > balance) {
-                alert("余额不足 / Insufficient balance!");
-                return;
-            }
-            balance -= cost;
-            addTransaction(`购买 ${type === "peace" ? "平安符" : "招财符"}，花费 ${cost} 冥币`);
-            document.getElementById("talismanResult").textContent = `购买成功！余额: ${balance} 冥币`;
-            addItem(type === "peace" ? "平安符" : "招财符");
-        }
+    function updateExchangeRates() {
+        exchangeRates.CNY = (0.01 * (1 + (Math.random() - 0.5) * 0.1)).toFixed(4);
+        exchangeRates.USD = (0.0015 * (1 + (Math.random() - 0.5) * 0.1)).toFixed(5);
+        exchangeRates.Points = (10 * (1 + (Math.random() - 0.5) * 0.1)).toFixed(1);
+        const rateList = document.getElementById("dailyExchangeRateList");
+        rateList.innerHTML = `
+            <li>1 冥币 = ${exchangeRates.CNY} 人民币 (¥)</li>
+            <li>1 冥币 = ${exchangeRates.USD} 美元 ($)</li>
+            <li>1 冥币 = ${exchangeRates.Points} 天仙积分 (Immortal Points)</li>
+        `;
+        const overviewRateList = document.getElementById("exchangeRateList");
+        overviewRateList.innerHTML = rateList.innerHTML;
+    }
 
-        function threeRealmsTransfer() {
-            const realm = document.getElementById("realm").value;
-            const amount = parseInt(document.getElementById("realmAmount").value);
-            if (amount > balance) {
-                alert("余额不足 / Insufficient balance!");
-                return;
-            }
-            balance -= amount;
-            addTransaction(`三界转账 ${amount} 冥币 至 ${realm === "heaven" ? "天界" : realm === "human" ? "人界" : "地界"}`);
-            document.getElementById("realmTransferResult").textContent = `转账成功！余额: ${balance} 冥币`;
-        }
+    function addTransaction(text) {
+        const li = document.createElement("li");
+        li.textContent = `${new Date().toLocaleString()}: ${text}`;
+        document.getElementById("transactionList").appendChild(li);
+    }
 
-        function craftElixir() {
-            const cost = 300;
-            if (cost > balance) {
-                alert("余额不足 / Insufficient balance!");
-                return;
-            }
-            balance -= cost;
-            addTransaction(`炼制增益丹，花费 ${cost} 冥币`);
-            document.getElementById("elixirResult").textContent = `炼制成功！余额: ${balance} 冥币`;
-            addItem("增益丹");
-        }
+    function addItem(item) {
+        const li = document.createElement("li");
+        li.textContent = item;
+        document.getElementById("itemList").appendChild(li);
+    }
 
-        function crossWorldTransfer() {
-            const world = document.getElementById("world").value;
-            const amount = parseInt(document.getElementById("worldAmount").value);
-            if (amount > balance) {
-                alert("余额不足 / Insufficient balance!");
-                return;
-            }
-            balance -= amount;
-            addTransaction(`跨世转账 ${amount} 冥币 至 ${world}`);
-            document.getElementById("worldTransferResult").textContent = `转账成功！余额: ${balance} 冥币`;
-        }
+    function logout() {
+        alert("已退出登录 / Logged out!");
+        window.location.href = "index.html";
+    }
 
-        function offerBuddha() {
-            const amount = parseInt(document.getElementById("offeringAmount").value);
-            if (amount > balance) {
-                alert("余额不足 / Insufficient balance!");
-                return;
-            }
-            balance -= amount;
-            merit += amount * 1.5; // 政策加成50%
-            addTransaction(`供佛 ${amount} 冥币`);
-            document.getElementById("offerResult").textContent = `供奉成功！余额: ${balance} 冥币, 功德值: ${merit}`;
-        }
-
-        function addContact() {
-            const name = document.getElementById("contactName").value;
-            const account = document.getElementById("contactAccount").value.toUpperCase();
-            const li = document.createElement("li");
-            li.textContent = `${name} (${account})`;
-            document.getElementById("contactList").appendChild(li);
-            validAccounts.push(account);
-            alert(`联系人 ${name} 添加成功 / Contact ${name} added successfully!`);
-        }
-
-        function addTransaction(text) {
-            const li = document.createElement("li");
-            li.textContent = `${new Date().toLocaleString()}: ${text}`;
-            document.getElementById("transactionList").appendChild(li);
-        }
-
-        function addItem(item) {
-            const li = document.createElement("li");
-            li.textContent = item;
-            document.getElementById("itemList").appendChild(li);
-        }
-
-        // 图表生成
-        const ctx = document.getElementById("incenseChart").getContext("2d");
-        const incenseChart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
-                datasets: [{
-                    label: "香火数量 (柱)",
-                    data: [3000, 3500, 4000, 4500, 5000, 4800, 4600],
-                    borderColor: "#005b96", /* 中蓝色 */
-                    fill: false
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+    // 图表生成
+    const ctx = document.getElementById("incenseChart").getContext("2d");
+    const incenseChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+            datasets: [{
+                label: "香火数量 (柱)",
+                data: [3000, 3500, 4000, 4500, 5000, 4800, 4600],
+                borderColor: "#005b96",
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
-    </script>
+        }
+    });
+
+    // 初始加载时更新汇率
+    updateExchangeRates();
+
+    // 替换为真实的sendMessage函数
+    async function sendMessage() {
+    const input = document.getElementById("chatInput").value;
+    const chatBox = document.getElementById("chatBox");
+    const userMessage = document.createElement("div");
+    userMessage.className = "message user-message";
+    userMessage.textContent = `凡人/仙官: ${input}`;
+    chatBox.appendChild(userMessage);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    const response = await fetch('https://new.wei.bi/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'sk-QrTO3v5OPF6wmtzhLImr04ufXPH3vqsafwX1Jlb9U0hTXMXZ', // 替换为您的API密钥
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            model: 'qwen2.5:7b', // 匹配您使用的模型
+            messages: [
+                { role: 'system', content: prompt }, // 系统Prompt
+                { role: 'user', content: input }     // 用户输入
+            ],
+            stream: true,
+            temperature: 0.7, // 调整创造性
+            max_tokens: 500   // 增加最大tokens
+        })
+    });
+    if (!response.ok) throw new Error('API请求失败');
+    const reader = response.body.getReader();
+    let aiResponse = '';
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = new TextDecoder().decode(value);
+        const lines = chunk.split('\n').filter(line => line.trim().startsWith('data: '));
+        for (const line of lines) {
+            const data = JSON.parse(line.replace('data: ', ''));
+            if (data.choices && data.choices[0].delta.content) {
+                aiResponse += data.choices[0].delta.content;
+                const aiMessage = document.createElement("div");
+                aiMessage.className = "message ai-message";
+                aiMessage.textContent = `金禄星君: ${aiResponse}`;
+                if (chatBox.lastChild.className === "message ai-message") {
+                    chatBox.removeChild(chatBox.lastChild);
+                }
+                chatBox.appendChild(aiMessage);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+    }
+    document.getElementById("chatInput").value = "";
+}
+</script>
+</body>
+</html>
 </body>
 </html>
