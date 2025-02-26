@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国天地银行 - 首页</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #003087, #e6f0fa);
+            color: #333;
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .navbar {
+            background-color: #003087;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #b3cde0 !important;
+        }
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #005b96;
+            border-color: #005b96;
+            transition: transform 0.2s;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            background-color: #003087;
+            border-color: #003087;
+        }
+        .fun-fact, .notice {
+            background: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        footer {
+            background-color: #003087;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        .language-select {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">中国天地银行</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html" data-key="home">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html" data-key="about">关于我们</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html" data-key="services">服务</a></li>
+                    <li class="nav-item"><a class="nav-link" href="accounts.html" data-key="accounts">账户</a></li>
+                    <li class="nav-item"><a class="nav-link" href="loans.html" data-key="loans">贷款</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html" data-key="contact">联系我们</a></li>
+                </ul>
+                <select class="form-select language-select w-auto" onchange="changeLanguage(this.value)">
+                    <option value="zh">中文</option>
+                    <option value="en">English</option>
+                </select>
+                <button class="btn btn-outline-light ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">登录</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1 data-key="welcome">欢迎来到中国天地银行</h1>
+            <p class="lead" data-key="slogan">服务天界，惠及三界</p>
+            <p data-key="intro">在中国天地银行，我们是天界的金融使者，致力于为仙、人、冥三界提供卓越的货币服务。</p>
+            <a href="accounts.html" class="btn btn-primary btn-lg" data-key="openAccount">今日开立天界账户</a>
+        </div>
+
+        <div class="fun-fact">
+            <h3 data-key="didYouKnow">你知道吗？</h3>
+            <p data-key="funFact">在天界，每供奉一柱香可兑换10冥币，助您在天庭积累功德！</p>
+        </div>
+
+        <div class="notice">
+            <h3 data-key="notice">天界公告</h3>
+            <p data-key="noticeContent">玉皇大帝新政：本月三界转账手续费减免50%，速来体验！</p>
+        </div>
+    </div>
+
+    <!-- 登录模态框 -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel" data-key="login">登录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="event.preventDefault(); login();">
+                        <div class="mb-3">
+                            <label for="username" class="form-label" data-key="username">用户名</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label" data-key="password">密码</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-key="loginBtn">登录</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 中国天地银行。保留所有权利。</p>
+        <p data-key="contactUs">联系我们：info@chinaearthbank.com | 电话：1-800-473-3622</p>
+        <div>
+            <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a> |
+            <a href="#" class="text-white"><i class="fab fa-twitter"></i></a> |
+            <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const translations = {
+            zh: {
+                home: "首页",
+                about: "关于我们",
+                services: "服务",
+                accounts: "账户",
+                loans: "贷款",
+                contact: "联系我们",
+                welcome: "欢迎来到中国天地银行",
+                slogan: "服务天界，惠及三界",
+                intro: "在中国天地银行，我们是天界的金融使者，致力于为仙、人、冥三界提供卓越的货币服务。",
+                openAccount: "今日开立天界账户",
+                didYouKnow: "你知道吗？",
+                funFact: "在天界，每供奉一柱香可兑换10冥币，助您在天庭积累功德！",
+                notice: "天界公告",
+                noticeContent: "玉皇大帝新政：本月三界转账手续费减免50%，速来体验！",
+                login: "登录",
+                username: "用户名",
+                password: "密码",
+                loginBtn: "登录",
+                contactUs: "联系我们：info@chinaearthbank.com | 电话：1-800-473-3622"
+            },
+            en: {
+                home: "Home",
+                about: "About Us",
+                services: "Services",
+                accounts: "Accounts",
+                loans: "Loans",
+                contact: "Contact Us",
+                welcome: "Welcome to China Heaven Bank",
+                slogan: "Serving the Heavens, Benefiting the Three Realms",
+                intro: "At China Heaven Bank, we are the financial envoys of the heavens, dedicated to providing exceptional currency services across the immortal, human, and underworld realms.",
+                openAccount: "Open a Heavenly Account Today",
+                didYouKnow: "Did You Know?",
+                funFact: "In the heavens, each incense stick offered can be exchanged for 10 underworld coins, helping you accumulate merit in the celestial court!",
+                notice: "Heavenly Notice",
+                noticeContent: "New policy from the Jade Emperor: 50% fee reduction on three-realm transfers this month—experience it now!",
+                login: "Login",
+                username: "Username",
+                password: "Password",
+                loginBtn: "Login",
+                contactUs: "Contact Us: info@chinaearthbank.com | Phone: 1-800-473-3622"
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll("[data-key]").forEach(element => {
+                const key = element.getAttribute("data-key");
+                element.textContent = translations[lang][key];
+            });
+        }
+
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            if (username && password) { // 仅检查是否为空
+                window.location.href = "dashboard.html";
+            } else {
+                alert("请填写用户名和密码 / Please enter username and password!");
+            }
+        }
+    </script>
+</body>
+</html>

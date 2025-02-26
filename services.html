@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国天地银行 - 服务</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #003087, #e6f0fa);
+            color: #333;
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .navbar {
+            background-color: #003087;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #b3cde0 !important;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            margin: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            background-color: #003087;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        .language-select {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">中国天地银行</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html" data-key="home">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html" data-key="about">关于我们</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html" data-key="services">服务</a></li>
+                    <li class="nav-item"><a class="nav-link" href="accounts.html" data-key="accounts">账户</a></li>
+                    <li class="nav-item"><a class="nav-link" href="loans.html" data-key="loans">贷款</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html" data-key="contact">联系我们</a></li>
+                </ul>
+                <select class="form-select language-select w-auto" onchange="changeLanguage(this.value)">
+                    <option value="zh">中文</option>
+                    <option value="en">English</option>
+                </select>
+                <button class="btn btn-outline-light ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">登录</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="content">
+            <h1 data-key="services">我们的服务</h1>
+            <h2 data-key="personalBanking">仙界银行</h2>
+            <ul>
+                <li><strong data-key="checkingTitle">天皇支票账户</strong>: <span data-key="checkingContent">无手续费，跨越三界交易，天庭认证。</span></li>
+                <li><strong data-key="savingsTitle">功德储蓄账户</strong>: <span data-key="savingsContent">高仙利，每存款支持天界功德积累。</span></li>
+            </ul>
+            <h2 data-key="businessBanking">三界银行</h2>
+            <ul>
+                <li><strong data-key="businessCheckingTitle">三界支票账户</strong>: <span data-key="businessCheckingContent">适合仙商，无最低余额，免费仙卡。</span></li>
+                <li><strong data-key="businessSavingsTitle">三界储蓄账户</strong>: <span data-key="businessSavingsContent">赚取天利，灵活访问，与支票账户联动。</span></li>
+            </ul>
+            <h2 data-key="loans">天界贷款</h2>
+            <p data-key="loansContent">仙人贷款、神器贷款、天庭房产贷款，以及支持仙丹炼制的功德贷款。</p>
+            <h2 data-key="investments">仙资服务</h2>
+            <p data-key="investmentsContent">天界投资基金，仙道财务规划。</p>
+            <h2 data-key="specialPrograms">天皇特惠</h2>
+            <p data-key="specialProgramsContent">开账户赠功德，三界转账优惠（如跨界符箓融资）。</p>
+        </div>
+    </div>
+
+    <!-- 登录模态框 -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel" data-key="login">登录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="username" class="form-label" data-key="username">用户名</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label" data-key="password">密码</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-key="loginBtn">登录</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 中国天地银行。保留所有权利。</p>
+        <p data-key="contactUs">联系我们：info@chinaearthbank.com | 电话：1-800-473-3622</p>
+        <div>
+            <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a> |
+            <a href="#" class="text-white"><i class="fab fa-twitter"></i></a> |
+            <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const translations = {
+            zh: {
+                home: "首页",
+                about: "关于我们",
+                services: "服务",
+                accounts: "账户",
+                loans: "贷款",
+                contact: "联系我们",
+                personalBanking: "仙界银行",
+                checkingTitle: "天皇支票账户",
+                checkingContent: "无手续费，跨越三界交易，天庭认证。",
+                savingsTitle: "功德储蓄账户",
+                savingsContent: "高仙利，每存款支持天界功德积累。",
+                businessBanking: "三界银行",
+                businessCheckingTitle: "三界支票账户",
+                businessCheckingContent: "适合仙商，无最低余额，免费仙卡。",
+                businessSavingsTitle: "三界储蓄账户",
+                businessSavingsContent: "赚取天利，灵活访问，与支票账户联动。",
+                loansContent: "仙人贷款、神器贷款、天庭房产贷款，以及支持仙丹炼制的功德贷款。",
+                investments: "仙资服务",
+                investmentsContent: "天界投资基金，仙道财务规划。",
+                specialPrograms: "天皇特惠",
+                specialProgramsContent: "开账户赠功德，三界转账优惠（如跨界符箓融资）。",
+                login: "登录",
+                username: "用户名",
+                password: "密码",
+                loginBtn: "登录",
+                contactUs: "联系我们：info@chinaearthbank.com | 电话：1-800-473-3622"
+            },
+            en: {
+                home: "Home",
+                about: "About Us",
+                services: "Services",
+                accounts: "Accounts",
+                loans: "Loans",
+                contact: "Contact Us",
+                personalBanking: "Immortal Banking",
+                checkingTitle: "Heavenly Checking Account",
+                checkingContent: "No fees, cross-realm transactions, certified by the celestial court.",
+                savingsTitle: "Merit Savings Account",
+                savingsContent: "High immortal interest, each deposit supports heavenly merit accumulation.",
+                businessBanking: "Three Realms Banking",
+                businessCheckingTitle: "Three Realms Checking Account",
+                businessCheckingContent: "Ideal for immortal merchants, no minimum balance, free immortal card.",
+                businessSavingsTitle: "Three Realms Savings Account",
+                businessSavingsContent: "Earn heavenly interest, flexible access, linked with checking account.",
+                loansContent: "Immortal loans, artifact loans, heavenly property loans, and merit loans for elixir crafting.",
+                investments: "Immortal Investment Services",
+                investmentsContent: "Heavenly investment funds, immortal financial planning.",
+                specialPrograms: "Heavenly Benefits",
+                specialProgramsContent: "Open an account for merit gifts, discounts on three-realm transfers (e.g., cross-realm talisman financing).",
+                login: "Login",
+                username: "Username",
+                password: "Password",
+                loginBtn: "Login",
+                contactUs: "Contact Us: info@chinaearthbank.com | Phone: 1-800-473-3622"
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll("[data-key]").forEach(element => {
+                const key = element.getAttribute("data-key");
+                element.textContent = translations[lang][key];
+            });
+        }
+    </script>
+</body>
+</html>

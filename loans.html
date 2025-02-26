@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国天地银行 - 贷款</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #003087, #e6f0fa);
+            color: #333;
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .navbar {
+            background-color: #003087;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #b3cde0 !important;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            margin: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .calculator {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background-color: #005b96;
+            border-color: #005b96;
+            transition: transform 0.2s;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            background-color: #003087;
+            border-color: #003087;
+        }
+        footer {
+            background-color: #003087;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        .language-select {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">中国天地银行</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html" data-key="home">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html" data-key="about">关于我们</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html" data-key="services">服务</a></li>
+                    <li class="nav-item"><a class="nav-link" href="accounts.html" data-key="accounts">账户</a></li>
+                    <li class="nav-item"><a class="nav-link" href="loans.html" data-key="loans">贷款</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html" data-key="contact">联系我们</a></li>
+                </ul>
+                <select class="form-select language-select w-auto" onchange="changeLanguage(this.value)">
+                    <option value="zh">中文</option>
+                    <option value="en">English</option>
+                </select>
+                <button class="btn btn-outline-light ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">登录</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="content">
+            <h1 data-key="loans">贷款</h1>
+            <h2 data-key="personalLoans">仙人贷款</h2>
+            <p data-key="personalLoansContent">天利竞争，灵活还款，无需天宝抵押。</p>
+            <h2 data-key="autoLoans">神器贷款</h2>
+            <p data-key="autoLoansContent">新旧神器融资，快速审批，仙器再融资。</p>
+            <h2 data-key="homeLoans">天庭房产贷款</h2>
+            <p data-key="homeLoansContent">固定与可调天利，天界首购者优惠。</p>
+            <h2 data-key="greenLoans">功德贷款</h2>
+            <p data-key="greenLoansContent">支持仙丹炼制与天庭修炼，特别天利。</p>
+            <h2 data-key="howToApply">如何申请</h2>
+            <p data-key="howToApplyContent">确定贷款类型，准备天书（功德证明、仙籍等），在线或在天庭分行申请。</p>
+
+            <div class="calculator">
+                <h3 data-key="loanCalculator">贷款计算器</h3>
+                <div class="mb-3">
+                    <label for="loanAmount" class="form-label" data-key="loanAmount">贷款金额 (冥币)</label>
+                    <input type="number" class="form-control" id="loanAmount" placeholder="10000" required>
+                </div>
+                <div class="mb-3">
+                    <label for="loanTerm" class="form-label" data-key="loanTerm">贷款期限 (年)</label>
+                    <input type="number" class="form-control" id="loanTerm" placeholder="5" required>
+                </div>
+                <div class="mb-3">
+                    <label for="interestRate" class="form-label" data-key="interestRate">年天利 (%)</label>
+                    <input type="number" class="form-control" id="interestRate" placeholder="3.5" step="0.1" required>
+                </div>
+                <button class="btn btn-primary" onclick="calculateLoan()" data-key="calculate">计算</button>
+                <p id="result" class="mt-3"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 登录模态框 -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel" data-key="login">登录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="username" class="form-label" data-key="username">用户名</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label" data-key="password">密码</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-key="loginBtn">登录</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 中国天地银行。保留所有权利。</p>
+        <p data-key="contactUs">联系我们：info@chinaearthbank.com | 电话：1-800-473-3622</p>
+        <div>
+            <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a> |
+            <a href="#" class="text-white"><i class="fab fa-twitter"></i></a> |
+            <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const translations = {
+            zh: {
+                home: "首页",
+                about: "关于我们",
+                services: "服务",
+                accounts: "账户",
+                loans: "贷款",
+                contact: "联系我们",
+                personalLoans: "仙人贷款",
+                personalLoansContent: "天利竞争，灵活还款，无需天宝抵押。",
+                autoLoans: "神器贷款",
+                autoLoansContent: "新旧神器融资，快速审批，仙器再融资。",
+                homeLoans: "天庭房产贷款",
+                homeLoansContent: "固定与可调天利，天界首购者优惠。",
+                greenLoans: "功德贷款",
+                greenLoansContent: "支持仙丹炼制与天庭修炼，特别天利。",
+                howToApply: "如何申请",
+                howToApplyContent: "确定贷款类型，准备天书（功德证明、仙籍等），在线或在天庭分行申请。",
+                loanCalculator: "贷款计算器",
+                loanAmount: "贷款金额 (冥币)",
+                loanTerm: "贷款期限 (年)",
+                interestRate: "年天利 (%)",
+                calculate: "计算",
+                login: "登录",
+                username: "用户名",
+                password: "密码",
+                loginBtn: "登录",
+                contactUs: "联系我们：info@chinaearthbank.com | 电话：1-800-473-3622"
+            },
+            en: {
+                home: "Home",
+                about: "About Us",
+                services: "Services",
+                accounts: "Accounts",
+                loans: "Loans",
+                contact: "Contact Us",
+                personalLoans: "Immortal Loans",
+                personalLoansContent: "Competitive heavenly rates, flexible terms, no celestial treasure collateral required.",
+                autoLoans: "Artifact Loans",
+                autoLoansContent: "Financing for new and used artifacts, fast approval, immortal artifact refinancing.",
+                homeLoans: "Heavenly Property Loans",
+                homeLoansContent: "Fixed and adjustable heavenly rates, incentives for first-time celestial buyers.",
+                greenLoans: "Merit Loans",
+                greenLoansContent: "Support for elixir crafting and heavenly cultivation, special rates.",
+                howToApply: "How to Apply",
+                howToApplyContent: "Choose a loan type, prepare celestial documents (merit proof, immortal registry, etc.), apply online or at a heavenly branch.",
+                loanCalculator: "Loan Calculator",
+                loanAmount: "Loan Amount (Underworld Currency)",
+                loanTerm: "Loan Term (Years)",
+                interestRate: "Annual Heavenly Rate (%)",
+                calculate: "Calculate",
+                login: "Login",
+                username: "Username",
+                password: "Password",
+                loginBtn: "Login",
+                contactUs: "Contact Us: info@chinaearthbank.com | Phone: 1-800-473-3622"
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll("[data-key]").forEach(element => {
+                const key = element.getAttribute("data-key");
+                element.textContent = translations[lang][key];
+            });
+            if (lang === "en") {
+                document.getElementById("loanAmount").placeholder = "10000";
+                document.getElementById("loanTerm").placeholder = "5";
+                document.getElementById("interestRate").placeholder = "3.5";
+            } else {
+                document.getElementById("loanAmount").placeholder = "10000";
+                document.getElementById("loanTerm").placeholder = "5";
+                document.getElementById("interestRate").placeholder = "3.5";
+            }
+        }
+
+        function calculateLoan() {
+            const amount = parseFloat(document.getElementById("loanAmount").value);
+            const term = parseFloat(document.getElementById("loanTerm").value) * 12;
+            const rate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+            const monthlyPayment = (amount * rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1);
+            const totalPayment = monthlyPayment * term;
+            const lang = document.querySelector(".language-select").value;
+            const currency = "冥币";
+            document.getElementById("result").innerHTML = lang === "zh"
+                ? `月还款额: ${currency}${monthlyPayment.toFixed(2)} | 总还款额: ${currency}${totalPayment.toFixed(2)}`
+                : `Monthly Payment: ${currency}${monthlyPayment.toFixed(2)} | Total Payment: ${currency}${totalPayment.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
