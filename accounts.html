@@ -98,7 +98,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form onsubmit="event.preventDefault(); login();">
                         <div class="mb-3">
                             <label for="username" class="form-label" data-key="username">用户名</label>
                             <input type="text" class="form-control" id="username" required>
@@ -184,6 +184,16 @@
                 const key = element.getAttribute("data-key");
                 element.textContent = translations[lang][key];
             });
+        }
+
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            if (username && password) { // 任何非空输入都可登录
+                window.location.href = "dashboard.html";
+            } else {
+                alert("请填写用户名和密码 / Please enter username and password!");
+            }
         }
     </script>
 </body>
