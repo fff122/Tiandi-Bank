@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- 主页 -->
+    <url>
+        <loc>https://bank.91tv.news/index.html</loc>
+        <lastmod>2025-03-03</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- 关于我们 -->
+    <url>
+        <loc>https://bank.91tv.news/about.html</loc>
+        <lastmod>2025-03-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 服务 -->
+    <url>
+        <loc>https://bank.91tv.news/services.html</loc>
+        <lastmod>2025-03-03</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- 账户 -->
+    <url>
+        <loc>https://bank.91tv.news/accounts.html</loc>
+        <lastmod>2025-03-03</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- 贷款 -->
+    <url>
+        <loc>https://bank.91tv.news/loans.html</loc>
+        <lastmod>2025-03-03</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- 联系我们 -->
+    <url>
+        <loc>https://bank.91tv.news/contact.html</loc>
+        <lastmod>2025-03-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 用户后台 -->
+    <url>
+        <loc>https://bank.91tv.news/dashboard.html</loc>
+        <lastmod>2025-03-03</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+
