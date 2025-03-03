@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天地银行 - 功德记录</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ...existing styles... */
+        .merit-count {
+            font-size: 36px;
+            color: #d4af37;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .merit-badge {
+            width: 80px;
+            height: 80px;
+            margin: 10px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f8f9fa;
+            border: 2px solid #d4af37;
+        }
+    </style>
+</head>
+<body>
+    <!-- ...existing navbar... -->
+
+    <div class="container">
+        <div class="content">
+            <h1>功德记录</h1>
+            
+            <!-- 功德总量 -->
+            <div class="merit-count">
+                <i class="fas fa-dharmachakra"></i>
+                <span id="totalMerit">108,888</span>
+                <small class="d-block">功德总量</small>
+            </div>
+
+            <!-- 功德勋章 -->
+            <div class="text-center mb-4">
+                <div class="merit-badge" title="普度众生">
+                    <i class="fas fa-hand-holding-heart fa-2x"></i>
+                </div>
+                <div class="merit-badge" title="布施第一">
+                    <i class="fas fa-gift fa-2x"></i>
+                </div>
+                <div class="merit-badge" title="善心不倦">
+                    <i class="fas fa-dove fa-2x"></i>
+                </div>
+            </div>
+
+            <!-- 功德记录表 -->
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>功德事项</th>
+                            <th>功德值</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="meritHistory">
+                        <!-- 动态加载功德记录 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 功德排行 -->
+            <div class="mt-4">
+                <h3>功德排行榜</h3>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-crown text-warning"></i> 观世音菩萨</span>
+                            <span class="badge bg-primary">999,999</span>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>2. 地藏王菩萨</span>
+                            <span class="badge bg-secondary">888,888</span>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>3. 文殊菩萨</span>
+                            <span class="badge bg-secondary">777,777</span>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>4. 普贤菩萨</span>
+                            <span class="badge bg-secondary">666,666</span>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>5. 弥勒菩萨</span>
+                            <span class="badge bg-secondary">555,555</span>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>6. 龙树菩萨</span>
+                            <span class="badge bg-secondary">444,444</span>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>7. 维摩诘居士</span>
+                            <span class="badge bg-secondary">333,333</span>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>8. 净空法师</span>
+                            <span class="badge bg-secondary">222,222</span>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>9. 慧能大师</span>
+                            <span class="badge bg-secondary">111,111</span>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>10. 玄奘法师</span>
+                            <span class="badge bg-secondary">100,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ...existing footer... -->
+
+    <script>
+        // 加载功德历史记录
+        function loadMeritHistory() {
+            const history = [
+                { date: "2025-02-26", event: "布施贫困", merit: 1000, status: "已确认" },
+                { date: "2025-02-25", event: "放生功德", merit: 500, status: "已确认" },
+                { date: "2025-02-24", event: "诵经祈福", merit: 300, status: "已确认" }
+            ];
+            
+            const tbody = document.getElementById("meritHistory");
+            history.forEach(record => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.event}</td>
+                    <td>${record.merit}</td>
+                    <td>${record.status}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadMeritHistory);
+    </script>
+</body>
+</html>

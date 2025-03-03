@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天地银行 - 天界基金</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css">
+    <style>
+        :root {
+            --primary-color: #005b96;
+            --secondary-color: #005b96;
+        }
+
+        body {
+            background: #f8f9fa;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .fund-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .fund-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .fund-performance {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .fund-risk {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .risk-low { background: #28a745; color: white; }
+        .risk-medium { background: #ffc107; color: black; }
+        .risk-high { background: #dc3545; color: white; }
+
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-invest {
+            background: var(--primary-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-invest:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .balance-display {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            border: 2px solid var(--primary-color);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .balance-display h4 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .balance-display .amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .balance-update {
+            animation: flash 0.5s ease-out;
+        }
+
+        @keyframes flash {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- ...existing navbar... -->
+
+    <!-- 添加余额显示组件 -->
+    <div class="balance-display">
+        <h4>当前余额</h4>
+        <div class="amount" id="floatingBalance">100,000 冥币</div>
+    </div>
+
+    <div class="dashboard-header">
+        <div class="container">
+            <h1 class="animate__animated animate__fadeIn">天界基金投资中心</h1>
+            <p class="lead">专业的投资顾问，助您实现财富增值</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 基金总览 -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card animate__animated animate__fadeInUp">
+                    <h5>总资产</h5>
+                    <h3 id="totalAssets">888,888,888 冥币</h3>
+                    <div class="progress mt-2">
+                        <div class="progress-bar" role="progressbar" style="width: 75%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                    <h5>持仓收益</h5>
+                    <h3 id="totalProfit" class="text-success">+15.8%</h3>
+                    <div id="profitTrend"></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                    <h5>持仓基金数</h5>
+                    <h3 id="fundCount">3</h3>
+                    <div class="text-muted">占总基金30%</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card animate__animated animate__fadeInUp" style="animation-delay: 0.6s">
+                    <h5>账户余额</h5>
+                    <h3 id="userBalance">100,000 冥币</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- 投资组合分析 -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="chart-container">
+                    <h4>投资组合表现</h4>
+                    <canvas id="portfolioChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="chart-container">
+                    <h4>资产配置</h4>
+                    <canvas id="assetAllocationChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 基金列表 -->
+        <div id="fundList" class="row">
+            <!-- 基金卡片将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <!-- 投资模态框 -->
+    <div class="modal fade" id="investModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">基金投资</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="investForm">
+                        <input type="hidden" id="fundCode">
+                        <div class="mb-3">
+                            <label class="form-label">投资金额（冥币）</label>
+                            <input type="number" class="form-control" id="investAmount" required min="1000" step="1000">
+                            <div class="form-text">最低投资金额为1000冥币</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">投资期限</label>
+                            <select class="form-select" id="investPeriod" required>
+                                <option value="1">1年</option>
+                                <option value="3">3年</option>
+                                <option value="5">5年</option>
+                                <option value="10">10年</option>
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-invest">确认投资</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 基金数据
+        const funds = [
+            {
+                code: 'TH001',
+                name: '天庭成长基金',
+                risk: 'low',
+                riskText: '低风险',
+                description: '投资范围：天界国债、功德债券',
+                performance: 8.8,
+                minInvestment: 1000,
+                managementFee: 0.5
+            },
+            {
+                code: 'TH002',
+                name: '三界平衡基金',
+                risk: 'medium',
+                riskText: '中风险',
+                description: '投资范围：仙丹期货、功德指数',
+                performance: 12.6,
+                minInvestment: 5000,
+                managementFee: 1.0
+            },
+            {
+                code: 'TH003',
+                name: '仙道创新基金',
+                risk: 'high',
+                riskText: '高风险',
+                description: '投资范围：修仙科技、灵宝创新',
+                performance: 28.8,
+                minInvestment: 10000,
+                managementFee: 1.5
+            }
+        ];
+
+        let userBalance = 100000; // 从后台获取实际余额
+        let userInvestments = {};
+        let portfolioHistory = [];
+
+        // 初始化图表
+        function initCharts() {
+            // 投资组合表现图表
+            const portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
+            new Chart(portfolioCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    datasets: [{
+                        label: '投资组合收益率',
+                        data: [0, 5, 8, 12, 15, 15.8],
+                        borderColor: '#d4af37',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+
+            // 资产配置饼图
+            const allocationCtx = document.getElementById('assetAllocationChart').getContext('2d');
+            new Chart(allocationCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['低风险', '中风险', '高风险'],
+                    datasets: [{
+                        data: [40, 35, 25],
+                        backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+                    }]
+                }
+            });
+        }
+
+        // 渲染基金列表
+        function renderFunds() {
+            const fundList = document.getElementById('fundList');
+            fundList.innerHTML = funds.map(fund => `
+                <div class="col-md-4">
+                    <div class="fund-card animate__animated animate__fadeIn">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3>${fund.name}</h3>
+                            <span class="fund-risk risk-${fund.risk}">${fund.riskText}</span>
+                        </div>
+                        <p class="text-muted">${fund.description}</p>
+                        <div class="fund-performance ${fund.performance >= 0 ? 'text-success' : 'text-danger'}">
+                            ${fund.performance >= 0 ? '+' : ''}${fund.performance}%
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <small class="text-muted">管理费</small>
+                                <div>${fund.managementFee}%</div>
+                            </div>
+                            <div>
+                                <small class="text-muted">最低投资</small>
+                                <div>${fund.minInvestment.toLocaleString()} 冥币</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-invest w-100" onclick="invest('${fund.code}')">
+                            立即投资
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 投资处理
+        function invest(fundCode) {
+            const fund = funds.find(f => f.code === fundCode);
+            document.getElementById('fundCode').value = fundCode;
+            document.getElementById('investAmount').min = fund.minInvestment;
+            document.getElementById('investAmount').value = fund.minInvestment;
+            
+            const modal = new bootstrap.Modal(document.getElementById('investModal'));
+            modal.show();
+        }
+
+        // 更新显示
+        function updateDisplay() {
+            const balanceDisplay = document.getElementById('floatingBalance');
+            balanceDisplay.textContent = `${userBalance.toLocaleString()} 冥币`;
+            balanceDisplay.classList.add('balance-update');
+            setTimeout(() => balanceDisplay.classList.remove('balance-update'), 500);
+            
+            document.getElementById('userBalance').textContent = 
+                `${userBalance.toLocaleString()} 冥币`;
+            
+            let totalInvestment = Object.values(userInvestments).reduce((a, b) => a + b, 0);
+            document.getElementById('totalAssets').textContent = 
+                `${totalInvestment.toLocaleString()} 冥币`;
+            
+            document.getElementById('fundCount').textContent = 
+                Object.keys(userInvestments).length;
+        }
+
+        // 投资表单处理
+        document.getElementById('investForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fundCode = document.getElementById('fundCode').value;
+            const amount = parseInt(document.getElementById('investAmount').value);
+            const period = parseInt(document.getElementById('investPeriod').value);
+            
+            if (amount > userBalance) {
+                alert('余额不足！');
+                return;
+            }
+
+            userBalance -= amount;
+            if (!userInvestments[fundCode]) {
+                userInvestments[fundCode] = 0;
+            }
+            userInvestments[fundCode] += amount;
+
+            updateDisplay();
+            bootstrap.Modal.getInstance(document.getElementById('investModal')).hide();
+            
+            // 显示成功提示
+            const toast = new bootstrap.Toast(document.createElement('div'));
+            document.body.appendChild(toast._element);
+            toast._element.className = 'toast position-fixed bottom-0 end-0 m-3';
+            toast._element.innerHTML = `
+                <div class="toast-header">
+                    <strong class="me-auto">投资成功</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                    成功投资 ${amount.toLocaleString()} 冥币到 ${fundCode}
+                </div>
+            `;
+            toast.show();
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFunds();
+            initCharts();
+            updateDisplay();
+        });
+
+        // 实时更新基金收益率
+        setInterval(() => {
+            funds.forEach(fund => {
+                const change = (Math.random() - 0.5) * 0.1;
+                fund.performance = parseFloat((fund.performance + change).toFixed(1));
+            });
+            renderFunds();
+        }, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天地银行 - 天界征信</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ...existing styles... */
+        .credit-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #005b96;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .credit-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .credit-history {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- ...existing navbar... -->
+
+    <div class="container">
+        <div class="content">
+            <h1>天界征信</h1>
+            
+            <!-- 信用分数展示 -->
+            <div class="credit-score">
+                <span id="creditScore">计算中...</span>
+                <small class="d-block">天界信用分</small>
+            </div>
+
+            <!-- 信用详情 -->
+            <div class="credit-details">
+                <h3>信用概况</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>功德指数</h5>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">85%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>品行评级</h5>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">A+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 信用历史 -->
+            <div class="credit-history mt-4">
+                <h3>信用记录</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>事件</th>
+                            <th>分数变化</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="creditHistory">
+                        <!-- 动态加载信用记录 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 信用提升建议 -->
+            <div class="mt-4">
+                <h3>提升建议</h3>
+                <ul id="suggestions" class="list-group">
+                    <li class="list-group-item">每日诵经可提升功德指数</li>
+                    <li class="list-group-item">定期布施可增加品行评级</li>
+                    <li class="list-group-item">参与天界公益活动可获得额外信用加分</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ...existing footer and scripts... -->
+    
+    <script>
+        // 生成随机征信记录
+        function generateRandomRecords() {
+            const events = [
+                "按时还贷",
+                "功德布施",
+                "跨界转账准时",
+                "供奉玉皇大帝",
+                "修建功德殿",
+                "天庭公益活动",
+                "三界慈善捐款",
+                "放生积德"
+            ];
+            
+            const changes = ["+1", "+2", "+3", "+5", "+8", "+10", "-2", "-1"];
+            const records = [];
+            
+            // 生成过去30天的随机记录
+            for(let i = 0; i < 10; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                records.push({
+                    date: date.toISOString().split('T')[0],
+                    event: events[Math.floor(Math.random() * events.length)],
+                    change: changes[Math.floor(Math.random() * changes.length)],
+                    status: "已生效"
+                });
+            }
+            
+            return records;
+        }
+
+        // 生成随机征信分数
+        function generateRandomScore() {
+            // 基础分数350-850之间
+            const baseScore = 350 + Math.floor(Math.random() * 500);
+            document.getElementById("creditScore").textContent = baseScore;
+            
+            // 更新进度条
+            const goodScale = baseScore / 850 * 100;
+            document.querySelector('.progress-bar').style.width = goodScale + '%';
+            document.querySelector('.progress-bar').textContent = Math.floor(goodScale) + '%';
+            
+            // 设置评级
+            let rating;
+            if (baseScore >= 800) rating = "AAA";
+            else if (baseScore >= 750) rating = "AA";
+            else if (baseScore >= 700) rating = "A";
+            else if (baseScore >= 650) rating = "B";
+            else if (baseScore >= 600) rating = "C";
+            else rating = "D";
+            
+            document.querySelector('.bg-success').style.width = '90%';
+            document.querySelector('.bg-success').textContent = rating;
+        }
+
+        // 更新历史记录
+        function updateCreditHistory() {
+            const records = generateRandomRecords();
+            const tbody = document.getElementById("creditHistory");
+            tbody.innerHTML = ''; // 清空现有记录
+            
+            records.forEach(record => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.event}</td>
+                    <td>${record.change}</td>
+                    <td>${record.status}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 页面加载时执行
+        document.addEventListener("DOMContentLoaded", function() {
+            generateRandomScore();
+            updateCreditHistory();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天地银行 - 金钱运程</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ...existing styles... */
+        .fortune-chart {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- ...existing navbar... -->
+
+    <div class="container">
+        <div class="content">
+            <h1>金钱运程</h1>
+            
+            <!-- 运势概览 -->
+            <div class="alert alert-info">
+                <h4>当前运势: 财运亨通</h4>
+                <p>吉星高照，适合投资理财、开展新业务</p>
+            </div>
+
+            <!-- 运势图表 -->
+            <div class="fortune-chart">
+                <canvas id="fortuneChart"></canvas>
+            </div>
+
+            <!-- 运势详解 -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">近期财运</h5>
+                            <p class="card-text">财神眷顾，横财可期</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">投资建议</h5>
+                            <p class="card-text">可尝试天界基金</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">开运方位</h5>
+                            <p class="card-text">东南方向利于求财</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ...existing footer... -->
+
+    <script>
+        // 运势图表数据
+        const ctx = document.getElementById('fortuneChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时'],
+                datasets: [{
+                    label: '财运指数',
+                    data: [65, 70, 85, 90, 88, 95, 100, 95, 88, 85, 80, 75],
+                    borderColor: '#005b96',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
